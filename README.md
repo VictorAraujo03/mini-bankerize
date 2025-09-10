@@ -43,43 +43,43 @@ Aderência as requisitos funcionais e não funcionais
 <hr>
 
 
-Passo a passo
+**Passo a passo**
 
-Clone o repositório
+**Clone o repositório**
 git clone https://github.com/victoraraujo03/mini-bankerize.git
 cd mini-bankerize
 
-Instale dependências
+**Instale dependências**
 composer install
 
-Configure ambiente
+**Configure ambiente**
 cp .env.example .env
 php artisan key:generate
 
-Configure banco no .env
-# DB_DATABASE=bankerize
-# DB_USERNAME=root
-# DB_PASSWORD=
+**Configure banco no .env**
+DB_DATABASE=bankerize
+DB_USERNAME=root
+DB_PASSWORD=
 
-Execute migrações
+**Execute migrações**
 php artisan migrate
 
-Instale APIs (Laravel 11+)
+**Instale APIs (Laravel 11+)**
 php artisan install:api
 
 
-Para Executar:
+**Para Executar:**
 
-Terminal 1: Servidor
+**Terminal 1: Servidor**
 php artisan serve
 
-Terminal 2: Processador de filas
+**Terminal 2: Processador de filas**
 php artisan queue:work
 
-Terminal 3: Testes
+**Terminal 3: Testes**
 curl http://localhost:8000/api/health
 
-Criar Proposta:
+**Criar Proposta:**
 
 POST /api/proposal
 Content-Type: application/json
@@ -92,7 +92,7 @@ Content-Type: application/json
     "chave_pix": "maria@email.com"
 }
 
-Resposta (sempre sucesso):
+**Resposta (sempre sucesso):**
 {
     "message": "Proposta criada com sucesso",
     "data": {
@@ -106,17 +106,17 @@ Resposta (sempre sucesso):
     }
 }
 
-Consultar Proposta
+**Consultar Proposta**
 
 GET /api/proposal/1
 
 
-Listar Propostas
+**Listar Propostas**
 
 GET /api/proposal
 GET /api/proposal?status=completed
 
-health check:
+**health check:**
 
 GET /api/health
 
