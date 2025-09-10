@@ -45,38 +45,38 @@ Aderência as requisitos funcionais e não funcionais
 
 Passo a passo
 
-# 1. Clone o repositório
+Clone o repositório
 git clone https://github.com/victoraraujo03/mini-bankerize.git
 cd mini-bankerize
 
-# 2. Instale dependências
+Instale dependências
 composer install
 
-# 3. Configure ambiente
+Configure ambiente
 cp .env.example .env
 php artisan key:generate
 
-# 4. Configure banco no .env
+Configure banco no .env
 # DB_DATABASE=bankerize
 # DB_USERNAME=root
 # DB_PASSWORD=
 
-# 5. Execute migrações
+Execute migrações
 php artisan migrate
 
-# 6. Instale APIs (Laravel 11+)
+Instale APIs (Laravel 11+)
 php artisan install:api
 
 
 Para Executar:
 
-# Terminal 1: Servidor
+Terminal 1: Servidor
 php artisan serve
 
-# Terminal 2: Processador de filas
+Terminal 2: Processador de filas
 php artisan queue:work
 
-# Terminal 3: Testes
+Terminal 3: Testes
 curl http://localhost:8000/api/health
 
 Criar Proposta:
@@ -122,19 +122,19 @@ GET /api/health
 
 .ENV (variaveis de ambiente)
 
-# Banco de dados
+Banco de dados
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_DATABASE=bankerize
 DB_USERNAME=root
 DB_PASSWORD=
 
-# Redis (filas)
+Redis (filas)
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 QUEUE_CONNECTION=redis
 
-# APIs Externas  
+APIs Externas  
 EXTERNAL_API_URL=https://util.devi.tools/api/v2/authorize
 NOTIFICATION_API_URL=https://util.devi.tools/api/v1/notify
 
