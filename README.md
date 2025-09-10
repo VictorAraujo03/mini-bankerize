@@ -1,61 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+A mini Bankerize é uma API para cadastro de propostas em um sistema de terceiro que eventualmente fica indisponivel e
+além disso você precisa enviar um email ou sms para uma API de terceiro que também pode ficar eventualmente indisponivel.
+Você precisa conseguir realizar o cadastro completamente em 100% das vezes sem retornar falhas para o usuario final.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Requisitos funcionais:
 
-## About Laravel
+1. Para cadastrar a proposta precisamos dos seguintes dados: CPF, Nome, Data de nascimento, Valor do empréstimo e chave pix.
+2. Para simular a indisponibilidade da API de terceiro para realizar o cadastro utilize essa API mock: https://util.devi.tools/api/v2/authorize
+3. Utilize o seguinte mock para simular o envio da notificação de empréstimo: https://util.devi.tools/api/v1/notify.
+4. Esse serviço precisa ser restful
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Requisitos não funcionais:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Deve ser feito com PHP 8 em diante 
+2. Utilize Docker (utilizei xampp)
+3. Banco de dados mysql ou postgresql - (utilizei mysql)
+4. Construa testes automatizados
+5. Utilize o Laravel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Endpoint de cadastro:
+Você pode implementar o que achar necessário para esse serviço, porém iremos analisar somente o fluxo de cadastro de proposta.
+A implementação deve serguir o exemplo abaixo:
+POST /proposal
+Content-Type: application/json
 
-## Learning Laravel
+{
+"cpf": "123123123123",
+"nome": "Fulano de Tal",
+"data_nascimento": "2024-10-10",
+"valor_emprestimo": 1000.00,
+"chave_pix": "teste@teste.com"
+}
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+O que será avaliado:
+Funcionar! - (está funcionando)
+Aplicação de padrões de projeto (Se necessário) 
+Conhecimentos em SOLID - OK
+Aderência as PSRs 
+Ports and Adapters (Hexagonal Architecture) 
+Clean Code
+Aderência as requisitos funcionais e não funcionais
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+<hr>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+Passo a passo
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 1. Clone o repositório
+git clone https://github.com/victoraraujo03/mini-bankerize.git
+cd mini-bankerize
 
-### Premium Partners
+# 2. Instale dependências
+composer install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# 3. Configure ambiente
+cp .env.example .env
+php artisan key:generate
 
-## Contributing
+# 4. Configure banco no .env
+# DB_DATABASE=bankerize
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 5. Execute migrações
+php artisan migrate
 
-## Code of Conduct
+# 6. Instale APIs (Laravel 11+)
+php artisan install:api
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+Para Executar:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Terminal 1: Servidor
+php artisan serve
 
-## License
+# Terminal 2: Processador de filas
+php artisan queue:work
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Terminal 3: Testes
+curl http://localhost:8000/api/health
+
+Criar Proposta:
+
+POST /api/proposal
+Content-Type: application/json
+
+{
+    "cpf": "11144477735",
+    "nome": "Maria Silva",
+    "data_nascimento": "1985-03-15",
+    "valor_emprestimo": 15000.00,
+    "chave_pix": "maria@email.com"
+}
+
+Resposta (sempre sucesso):
+{
+    "message": "Proposta criada com sucesso",
+    "data": {
+        "id": 1,
+        "cpf": "11144477735", 
+        "nome": "Maria Silva",
+        "data_nascimento": "1985-03-15",
+        "valor_emprestimo": "15000.00",
+        "chave_pix": "maria@email.com",
+        "status": "pending"
+    }
+}
+
+Consultar Proposta
+
+GET /api/proposal/1
+
+
+Listar Propostas
+
+GET /api/proposal
+GET /api/proposal?status=completed
+
+health check:
+
+GET /api/health
+
+.ENV (variaveis de ambiente)
+
+# Banco de dados
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=bankerize
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Redis (filas)
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+QUEUE_CONNECTION=redis
+
+# APIs Externas  
+EXTERNAL_API_URL=https://util.devi.tools/api/v2/authorize
+NOTIFICATION_API_URL=https://util.devi.tools/api/v1/notify
+
+Executar os Testes:
+php artisan test
+
+
